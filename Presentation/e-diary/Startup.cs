@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace e_diary.WebApi
 {
@@ -48,14 +48,21 @@ namespace e_diary.WebApi
         {
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+        
             #region Connect with database
             // Add ApplicationDbContext to DI
             var sqlConnectionString = Configuration.GetConnectionString("DefaultConnection");
             #endregion
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v4", new Info { Title = "ediary", Description = "Swagger e-diary" });
+            }
+            );
 
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
@@ -74,6 +81,11 @@ namespace e_diary.WebApi
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v4/swagger.json", "ExamPlatform");
+            });
         }
     }
 }

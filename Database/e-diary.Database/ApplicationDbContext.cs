@@ -1,31 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using e_diary.Database.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.IO;
 
 namespace e_diary.Database
 {
-    /// <summary>
-    /// The database representational model for our application
-    /// </summary>
     public class ApplicationDbContext : DbContext
     {
-        #region Public Properties
-
-        /// <summary>
-        /// The settings for the application
-        /// </summary>
-        public DbSet<SettingsDataModel> Settings { get; set; }
-
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// Default constructor, expecting database options passed in
-        /// </summary>
-        /// <param name="options">The database context options</param>
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions options) : base(options)
         { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -42,14 +24,13 @@ namespace e_diary.Database
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
-        #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
-        
-            modelBuilder.Entity<SettingsDataModel>().HasIndex(a => a.Name);
         }
+
+        public virtual DbSet<DBUser> Users { get; set; }
+       
     }
 }
